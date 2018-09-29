@@ -26,19 +26,24 @@ subway_data =
 
 This dataset has `r ncol(subway_data)` columns and `r nrow(subway_data)` rows. The variables are line, station names, station latitude and longitude, routes served, entry, vending, entrance type, and ADA compliance. The data cleaning steps so far has been transforming column names into lower case and snake form with the clean_names function, creating dataset with just the necessary variables with the select function, and recoding "entry"" from character to a logical variable that shows TRUE for yes and FALSE for no. This dataset is not yet tidy because station names are not distinct.
 
-### Answering questions with data
+### Answering questions with data based off distinct stations
 
-* There are a total of `r nrow(distinct(subway_data, station_name, line))` distinct stations.
-* The number of stations that are ADA compliant are `r nrow(filter(subway_data, ada == TRUE))`. 
-* The porportion of station entrances / exists without vending that allows entrance is `r nrow(filter(subway_data, vending == "NO" & entry == TRUE)) / nrow(subway_data)`.
+```{r distinct}
+subway_data_distinct = distinct(subway_data, station_name, line, .keep_all = TRUE)
+```
+
+* There are a total of `r nrow(subway_data_distinct)` distinct stations.
+* The number of stations that are ADA compliant are `r nrow(filter(subway_data_distinct, ada == TRUE))`. 
+* The proportion of station entrances / exists without vending that allows entrance is `r nrow(filter(subway_data_distinct, vending == "NO" & entry == TRUE)) / nrow(subway_data_distinct)`.
 
 ### Reformat data to learn about A train
 
 ```{r a train}
 subway_distinct =
-  gather(subway_data, key = route_number, value = route_name, route1:route11)
+  gather(subway_data_distinct, key = route_number, value = route_name, route1:route11) 
 ```
-Out of the `r nrow(subway_distinct)` subway stations, there are `r nrow(filter(subway_distinct, route_name == "A"))` who serve the A train. Within those stations, `r nrow(filter(subway_distinct, route_name == "A" & ada == TRUE))` are ADA compliant.  
+Out of the distinct subway stations, there are `r nrow(filter(subway_distinct, route_name == "A"))` who serve the A train. Within those stations, `r nrow(filter(subway_distinct, route_name == "A" & ada == TRUE))` are ADA compliant.  
+
 
 
 
