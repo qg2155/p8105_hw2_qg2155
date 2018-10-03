@@ -11,10 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r tidyverse}
 library(tidyverse)
+library(magrittr)
 ```
 
 # Problem 1
-### Import and cleaning subway dataset 
+### Import and clean subway dataset 
 
 ```{r gather}
 subway_data =
@@ -44,6 +45,17 @@ subway_distinct =
 ```
 Out of the distinct subway stations, there are `r nrow(filter(subway_distinct, route_name == "A"))` who serve the A train. Within those stations, `r nrow(filter(subway_distinct, route_name == "A" & ada == TRUE))` are ADA compliant.  
 
+# Problem 2
+### Import and clean trash dataset
+
+```{r clean}
+mrtrash_data =
+  readxl::read_excel(path = "./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "A2:N258", na = "dumpster") %>% 
+  janitor::clean_names() %>% 
+  
+  mutate(round(mrtrash_data$sports_balls, digits = 0))
+  
+```
 
 
 
