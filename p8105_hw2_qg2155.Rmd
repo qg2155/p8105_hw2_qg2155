@@ -9,7 +9,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r tidyverse}
+```{r tidyverse, include = FALSE}
 library(tidyverse)
 library(magrittr)
 
@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 # Problem 1
 ### Import and clean subway dataset 
 
-```{r gather}
+```{r gather, message = FALSE}
 subway_data =
   read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
   janitor::clean_names() %>% 
