@@ -25,7 +25,7 @@ subway_data =
   mutate(entry = recode(entry, "YES" = TRUE, "NO" = FALSE)) 
 ```
 
-This dataset has `r ncol(subway_data)` columns and `r nrow(subway_data)` rows. The variables are line, station names, station latitude and longitude, routes served, entry, vending, entrance type, and ADA compliance. The data cleaning steps so far has been transforming column names into lower case and snake form with the clean_names function, creating dataset with just the necessary variables with the select function, and recoding "entry"" from character to a logical variable that shows TRUE for yes and FALSE for no. This dataset is not yet tidy because station names are not distinct.
+This dataset has `r ncol(subway_data)` columns and `r nrow(subway_data)` rows. The variables are line, station names, station latitude and longitude, routes served, entry, vending, entrance type, and ADA compliance. The data cleaning steps so far has been transforming column names into lower case and snake form with the clean_names function, creating dataset with just the necessary variables with the select function, and recoding "entry" from character to a logical variable that shows TRUE for yes and FALSE for no. This dataset is not yet tidy because station names are not distinct.
 
 ### Answering questions with data based off distinct stations
 
@@ -50,13 +50,50 @@ Out of the distinct subway stations, there are `r nrow(filter(subway_distinct, r
 
 ```{r clean}
 mrtrash_data =
-  readxl::read_excel(path = "./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "A2:N258", na = "dumpster") %>% 
+  readxl::read_excel(path = "./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+                     sheet = "Mr. Trash Wheel", range = "A2:N336") %>% 
   janitor::clean_names() %>% 
-  
-  mutate(round(mrtrash_data$sports_balls, digits = 0))
+  na.omit(mrtrash_data & dumpster) %>% 
+  mutate(sports_balls = as.integer(round(sports_balls, 0)))
+```
+
+### Import and clean precipitation datasets from 2016 and 2017
+```{r 2016precipitation}
+precip_2016 = 
+  readxl::read_excel(path = "./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+                             sheet = "2016 Precipitation", range = "A2:B14") %>% 
+  janitor::clean_names() %>% 
+  mutate(year = 2016)
   
 ```
 
+```{r 2017precipitation}
+precip_2017 =
+  readxl::read_excel(path = "./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+                             sheet = "2017 Precipitation", range = "A2:B14") %>% 
+  janitor::clean_names() %>% 
+  mutate(year = 2017)
+```
 
+###Combining precipatation data from years 2016 and 2017
+```{r}
+precip_combined = 
+  bind_rows(precip_2016, precip_2017) %>% 
+  mutate(month = month.name[month])
+```
 
+The Mr.Trash Wheel dataset has `r ncol(mrtrash_data)` variables and `r nrow(mrtrash_data)` observations. It has variables dumpster, month, year, date, weight in tons, volumne in cubic yards, homes powered and variables for trash such as plastic bottles, polystyrene, cigarette butts, glass bottles, grocery bags, chip bags, and sports balls. The precipitation dataset has `r ncol(precip_combined)` variables and `r nrow(precip_combined)` observations. It has variables month, total, and year. 
+
+* The total precipitation in 2017 was `r sum(precip_combined$total[precip_combined$year == 2017])`. 
+
+* The median number of sports balls in a dumpster in 2016 was `r median(mrtrash_data$sports_balls[mrtrash_data$year == 2016])`. 
+
+# Problem 3
+### Load dataset into R
+```{r}
+devtools::install_github("p8105/p8105.datasets")
+
+library(p8105.datasets)
+data(brfss_smart2010)
+```
 
