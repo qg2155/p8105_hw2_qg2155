@@ -90,7 +90,7 @@ precip_combined =
   mutate(month = month.name[month])
 ```
 
-The Mr.Trash Wheel dataset has `r ncol(mrtrash_data)` variables and `r nrow(mrtrash_data)` observations. It has variables dumpster, month, year, date, weight in tons, volumne in cubic yards, homes powered and variables for trash such as plastic bottles, polystyrene, cigarette butts, glass bottles, grocery bags, chip bags, and sports balls. The precipitation dataset has `r ncol(precip_combined)` variables and `r nrow(precip_combined)` observations. It has variables month, total, and year. 
+The Mr.Trash Wheel dataset has `r ncol(mrtrash_data)` variables and `r nrow(mrtrash_data)` observations. It has variables dumpster, month, year, date, weight in tons, volumne in cubic yards, homes powered and variables for trash such as plastic bottles, polystyrene, cigarette butts, glass bottles, grocery bags, chip bags, and sports balls. Variables that could be considered key variables are month, year, weight in tons, volumne in cubic yards, and homes powered. The precipitation dataset has `r ncol(precip_combined)` variables and `r nrow(precip_combined)` observations. It has variables month, total, and year. 
 
 * The total precipitation in 2017 was `r sum(precip_combined$total[precip_combined$year == 2017])`. 
 
@@ -143,7 +143,7 @@ brfss_data_histogram = brfss_data %>%
 
 ```{r histogram}
 ggplot(brfss_data_histogram, aes(x = excellent, fill = "name")) +
-  geom_histogram(binwidth = 2) +
+  geom_histogram() +
   labs(
     title = "Histogram of Excellent",
     x = "Excellent Responses",
