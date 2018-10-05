@@ -30,7 +30,8 @@ This dataset has `r ncol(subway_data)` columns and `r nrow(subway_data)` rows. T
 ### Answering questions with data based off distinct stations
 
 ```{r distinct}
-subway_data_distinct = distinct(subway_data, station_name, line, .keep_all = TRUE)
+subway_data_distinct = 
+  distinct(subway_data, station_name, line, .keep_all = TRUE)
 ```
 
 * There are a total of `r nrow(subway_data_distinct)` distinct stations.
@@ -53,7 +54,7 @@ mrtrash_data =
   readxl::read_excel(path = "./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
                      sheet = "Mr. Trash Wheel", range = "A2:N336") %>% 
   janitor::clean_names() %>% 
-  na.omit(mrtrash_data & dumpster) %>% 
+  na.omit(mrtrash_data$dumpster) %>% 
   mutate(sports_balls = as.integer(round(sports_balls, 0)))
 ```
 
@@ -90,10 +91,38 @@ The Mr.Trash Wheel dataset has `r ncol(mrtrash_data)` variables and `r nrow(mrtr
 
 # Problem 3
 ### Load dataset into R
-```{r}
+```{r loaddata}
 devtools::install_github("p8105/p8105.datasets")
 
 library(p8105.datasets)
 data(brfss_smart2010)
 ```
+
+### Clean the dataset
+```{r clean brfss}
+brfss_data = 
+  janitor::clean_names(brfss_smart2010) %>% 
+  filter(topic == "Overall Health") %>% 
+  select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location)) %>% 
+  spread(key = response, value = data_value) %>% 
+  janitor::clean_names() %>% 
+  mutate(excellent_verygood = excellent + very_good)
+```
+
+### Answer the questions
+```{r locations, warning = FALSE}
+locations_distinct = brfss_data %>% 
+  distinct(brfss_data, locationdesc, .keep_all = TRUE)
+```
+
+```{r states, warning = FALSE}
+states_distinct = brfss_data %>% 
+  distinct(brfss_data, locationabbr, .keep_all = TRUE)
+```
+
+* This dataset has `r nrow(locations_distinct)` unique locations.
+* This dataset has all the states including DC because there are `r nrow(states_distinct)` states entered. The state that is observed the most is `r tail(names(sort(table(brfss_data$locationabbr))), 1)`. 
+* In 2002, the median of the "Excellent" response value was `r median(brfss_data$excellent[brfss_data$year == 2002], na.rm = TRUE)`. 
+
+
 
