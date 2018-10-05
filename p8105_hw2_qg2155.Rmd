@@ -42,7 +42,8 @@ subway_data_distinct =
 
 * There are a total of `r nrow(subway_data_distinct)` distinct stations.
 * The number of stations that are ADA compliant are `r nrow(filter(subway_data_distinct, ada == TRUE))`. 
-* The proportion of station entrances / exists without vending that allows entrance is `r nrow(filter(subway_data_distinct, vending == "NO" & entry == TRUE)) / nrow(subway_data_distinct)`.
+* The number of stations that do not have vending is `r nrow(filter(subway_data_distinct, vending == "NO"))`
+The proportion of station entrances / exists without vending that allows entrance is `r nrow(filter(subway_data, vending == "NO" & entry == TRUE)) / nrow(filter(subway_data, vending == "NO"))`.
 
 ### Reformat data to learn about A train
 
